@@ -138,9 +138,14 @@ endif()
 
 # Winsock.
 if(WIN32)
-    set(CMAKE_EXTRA_INCLUDE_FILES winsock2.h ws2tcpip.h)
-    set(CMAKE_REQUIRED_LIBRARIES  ws2_32.lib)
-    set(CMAKE_REQUIRED_DEFINITIONS -FIwinsock2.h -FIws2tcpip.h)
+    list(APPEND CMAKE_EXTRA_INCLUDE_FILES winsock2.h ws2tcpip.h)
+    list(APPEND CMAKE_REQUIRED_LIBRARIES ws2_32)
+
+    if(CMAKE_COMPILER_IS_GNUCC)
+      list(APPEND CMAKE_REQUIRED_DEFINITIONS -include winsock2.h -include ws2tcpip.h)
+    elseif(MSVC)
+      list(APPEND CMAKE_REQUIRED_DEFINITIONS /FI winsock2.h /FI ws2tcpip.h)
+    endif()
 endif()
 
 # Check if _GNU_SOURCE is available.
